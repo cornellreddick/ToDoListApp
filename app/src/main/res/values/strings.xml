@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">HW2_Fix</string>
+    <string name="youHave">You have</string>
+    <string name="taskTotal">0</string>
+    <string name="task">tasks</string>
+    <string name="upcomingTaks">Upcoming Tasks</string>
+    <string name="currentTask">current task</string>
+    <string name="taskDate">02/02/2022</string>
+    <string name="viewButton">VIEW TASKS</string>
+    <string name="createTask">CREATE A TASKS</string>
+    <string name="cancel">CANCEL</string>
+    <string name="delete">DELETE</string>
+    <string name="priority">Status</string>
+    <string name="taskInformation">Task Information</string>
+    <string name="nameLabel">Name:</string>
+    <string name="nameDisplay">Task</string>
+    <string name="dateLabel">Date:</string>
+    <string name="dateDisplay">02/02/2022</string>
+    <string name="priorityLabel">Priority:</string>
+    <string name="priorityDisplay">Status</string>
+
+    <string name="createNameLabel">Name:</string>
+    <string name="createNameHint">Task Name</string>
+    <string name="createDateLabel">Date:</string>
+    <string name="createSetDateLabel">Set date</string>
+    <string name="createPriorityLabel">Priority:</string>
+    <string name="highRadiobtn">High</string>
+    <string name="mediumRadiobtn">Medium</string>
+    <string name="low">Low</string>
+    <string name="submint">Submit</string>
+</resources>
