@@ -38,7 +38,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
-
+        setTitle("Create Task");
 
         editText = findViewById(R.id.createName);
         radioGroup = findViewById(R.id.radioGroup);

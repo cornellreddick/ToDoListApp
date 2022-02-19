@@ -1,5 +1,9 @@
 package com.example.hw2_fix;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -7,6 +11,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -23,17 +28,30 @@ public class MainActivity extends AppCompatActivity {
     final static public String DATE_KEY = "Date: ";
     final static public String PRIORITY_KEY = "Priority: ";
     final static public String DATE_FORMAT = "MM/dd/yyyy";
+    final static public String POS_KEY = "position";
     TextView numTasks, currentTask, taskDate, priorityStatus;
     public static ArrayList<Task> tasks;
     ListView lv;
     ArrayAdapter<Task> adapterTask;
 
+    ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if (result != null && result.getResultCode() == RESULT_OK){
+                if (result.getData() != null && result.getData().getStringExtra(POS_KEY) != null)
+                Log.d("position", "onActivityResult: ");
+
+
+            }
+
+        }
+    });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
+        setTitle("To Do List");
 
         tasks = new ArrayList<>();
         tasks.add(new Task("Do Homework","02/07/2022",1));
@@ -94,10 +112,13 @@ public class MainActivity extends AppCompatActivity {
                         b.putString(TASKNAME_KEY, taskName);
                         b.putString(DATE_KEY, date);
                         b.putInt(PRIORITY_KEY, priority);
+                        b.putInt("position", which);
 
                         Intent intent = new Intent(MainActivity.this, TaskActivity.class);
                         intent.putExtras(b);
-                        startActivity(intent);
+                        startForResult.launch(intent);
+                        //startActivity(intent);
+                        adapterTask.notifyDataSetChanged();
                     }
                 });
                 builderSingle.show();
@@ -124,5 +145,4 @@ public class MainActivity extends AppCompatActivity {
         c.setLenient(true);
         return DATE_FORMAT.format(c.getTime().toString());
     }
-
 }

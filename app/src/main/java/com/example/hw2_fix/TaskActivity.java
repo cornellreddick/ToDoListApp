@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,7 +29,7 @@ public class TaskActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
-
+        setTitle("Display Task");
         tvName = findViewById(R.id.textViewName);
         tvDate = findViewById(R.id.textViewDate);
         tvPriority = findViewById(R.id.textViewStatus);
@@ -37,6 +38,7 @@ public class TaskActivity extends AppCompatActivity {
         String taskName = b.getString(MainActivity.TASKNAME_KEY);
         String date = b.getString(MainActivity.DATE_KEY);
         int priority = b.getInt(MainActivity.PRIORITY_KEY);
+        final int id = getIntent().getExtras().getInt("position");
 
         tvName.setText(MainActivity.TASKNAME_KEY + taskName);
         tvDate.setText(MainActivity.DATE_KEY + date);
@@ -54,20 +56,12 @@ public class TaskActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                // lv.findViewById(R.id.view);
-                adapterTask = new ArrayAdapter<>(TaskActivity.this, android.R.layout.select_dialog_item, android.R.id.text1, tasks);
-                lv.setAdapter(adapterTask);
-                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        Task task = tasks.get(position);
-                        adapterTask.remove(task);
-                        adapterTask.notifyDataSetChanged();
-                    }
-                });
                 Intent intent = new Intent(TaskActivity.this, MainActivity.class);
-                startActivity(intent);
-
+                //startActivity(intent);
+                intent.putExtra(MainActivity.POS_KEY, id);
+                setResult(RESULT_OK, intent);
+                finish();
+                Log.d("Click", "onClick: ");
             }
         });
 
