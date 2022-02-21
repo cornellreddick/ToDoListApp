@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class CreateTaskActivity extends AppCompatActivity {
+    final static public String CREATE_NAME_KEY = "CreateName";
+    final static public String CREATE_DATE_KEY = "CreateDate";
+    final static public String CREATE_PRIORITY_KEY = "CreatePriority";
     DatePickerDialog dp;
     TextView tvDate,  priority;
     int year;
@@ -56,7 +59,7 @@ public class CreateTaskActivity extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                                tvDate.setText(month + "/" + day + "/" + year);
+                                tvDate.setText(month+1 + "/" + day + "/" + year);
                             }
                         },
                         2022,
@@ -70,17 +73,17 @@ public class CreateTaskActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 int checked = radioGroup.getCheckedRadioButtonId();
-                String value;
-                int result = 0;
+                String result = "0";
+                int value = 0;
                 if (checked == R.id.high) {
-                    value = "3";
-                    result = Integer.parseInt(value);
+                    value = 3;
+                    result = String.valueOf(value);
                 } else if (checked == R.id.medium) {
-                    value = "2";
-                    result = Integer.parseInt(value);
+                    value = 2;
+                    result = String.valueOf(value);
                 } else if (checked == R.id.low) {
-                    value = "1";
-                    result = Integer.parseInt(value);
+                    value = 1;
+                    result = String.valueOf(value);
                 } else {
                     Toast.makeText(CreateTaskActivity.this, "Please Select a radio button!", Toast.LENGTH_SHORT).show();
                 }
@@ -95,11 +98,17 @@ public class CreateTaskActivity extends AppCompatActivity {
                 {
                     String date = tvDate.getText().toString();
                     String taskName = editText.getText().toString();
+                    String priority = result;
 
-                    tasks.add(new Task(taskName,date, result));
                     Intent intent = new Intent(CreateTaskActivity.this, MainActivity.class);
-                    startActivity(intent);
+                    intent.putExtra(CREATE_NAME_KEY, taskName);
+                    intent.putExtra(CREATE_DATE_KEY, date);
+                    intent.putExtra(CREATE_PRIORITY_KEY, priority);
+                    setResult(RESULT_OK, intent);
+                    finish();
+
                 }
+
 
             }
         });
@@ -108,7 +117,7 @@ public class CreateTaskActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(CreateTaskActivity.this, MainActivity.class);
-                startActivity(intent);
+                 startActivity(intent);
             }
         });
 

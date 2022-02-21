@@ -4,10 +4,12 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,7 +25,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
     final static public String TASKNAME_KEY = "Name: ";
     final static public String DATE_KEY = "Date: ";
     final static public String PRIORITY_KEY = "Priority: ";
@@ -32,15 +34,26 @@ public class MainActivity extends AppCompatActivity {
     TextView numTasks, currentTask, taskDate, priorityStatus;
     public static ArrayList<Task> tasks;
     ListView lv;
-    ArrayAdapter<Task> adapterTask;
+    public static ArrayAdapter<Task> adapterTask;
+    public static int deletePos;
 
     ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
         public void onActivityResult(ActivityResult result) {
             if (result != null && result.getResultCode() == RESULT_OK){
-                if (result.getData() != null && result.getData().getStringExtra(POS_KEY) != null)
-                Log.d("position", "onActivityResult: ");
+                if (result.getData() != null && result.getData().getStringExtra(CreateTaskActivity.CREATE_NAME_KEY) != null) {
+                    Log.d("position", "onActivityResult: ");
 
+                    String name = result.getData().getStringExtra(CreateTaskActivity.CREATE_NAME_KEY);
+                    String date = result.getData().getStringExtra(CreateTaskActivity.CREATE_DATE_KEY);
+                    String priority = result.getData().getStringExtra(CreateTaskActivity.CREATE_PRIORITY_KEY);
+
+                    currentTask.setText(result.getData().getStringExtra(CreateTaskActivity.CREATE_NAME_KEY));
+                    taskDate.setText(result.getData().getStringExtra(CreateTaskActivity.CREATE_DATE_KEY));
+                    priorityStatus.setText(result.getData().getStringExtra(CreateTaskActivity.CREATE_PRIORITY_KEY));
+
+                    tasks.add(new Task(name, date, Integer.parseInt(priority)));
+                }
 
             }
 
@@ -112,7 +125,8 @@ public class MainActivity extends AppCompatActivity {
                         b.putString(TASKNAME_KEY, taskName);
                         b.putString(DATE_KEY, date);
                         b.putInt(PRIORITY_KEY, priority);
-                        b.putInt("position", which);
+                        b.putInt(POS_KEY, which);
+                        deletePos = which;
 
                         Intent intent = new Intent(MainActivity.this, TaskActivity.class);
                         intent.putExtras(b);
@@ -129,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, CreateTaskActivity.class);
-                startActivity(intent);
+                startForResult.launch(intent);
             }
         });
 
@@ -144,5 +158,12 @@ public class MainActivity extends AppCompatActivity {
         c.set(Calendar.DAY_OF_MONTH, Math.abs(r.nextInt()) % 30);
         c.setLenient(true);
         return DATE_FORMAT.format(c.getTime().toString());
+    }
+
+    RemoveItem removeItem;
+
+    interface RemoveItem{
+        void getPos(int pos);
+        void removeItem(int remove);
     }
 }
