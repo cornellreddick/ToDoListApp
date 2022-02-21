@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity{
 
                     }
                 });
+
                 adapterTask = new ArrayAdapter<>(MainActivity.this, android.R.layout.select_dialog_item, android.R.id.text1, tasks);
                 builderSingle.setAdapter(adapterTask, new DialogInterface.OnClickListener() {
                     @Override
